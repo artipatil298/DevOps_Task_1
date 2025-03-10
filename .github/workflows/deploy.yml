@@ -27,18 +27,17 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: my-artifact  # ✅ Ensure this matches deploy step
-          path: .  # ✅ Ensure it includes your `index.html`
+          path: ./  # ✅ Ensure it includes your `index.html`
 
       - name: Debug Uploaded Artifacts
         run: |
           echo "Checking available artifacts..."
           gh run list --limit 5
           latest_failed_run=$(gh run list --json databaseId,conclusion --jq '.[] | select(.conclusion=="failure") | .databaseId' | head -n 1)
-          echo "Latest failed run ID: $latest_failed_run"
-          if [[ -n "$latest_failed_run" ]]; then
-            gh run view "$latest_failed_run" --log
-          else
+          if [[ -z "$latest_failed_run" ]]; then
             echo "No failed runs found."
+          else
+            gh run view "$latest_failed_run" --log
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
