@@ -27,10 +27,12 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: my-artifact
-          path: ./
+          path: ./index.html
 
       - name: Debug Available Artifacts
-        run: ls -R $GITHUB_WORKSPACE
+        run: |
+          echo "Checking available artifacts..."
+          ls -R $GITHUB_WORKSPACE
 
       - name: Wait before deploying
         run: sleep 10 
