@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Runs this workflow when code is pushed to the main branch
+      - master  # Runs this workflow when code is pushed to the main branch
 
 permissions:
   contents: read
