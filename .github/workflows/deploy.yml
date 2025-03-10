@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master  # Runs this workflow when code is pushed to main branch
+      - master  
 
 permissions:
   contents: read
@@ -23,23 +23,23 @@ jobs:
       - name: Debug File Structure
         run: ls -R
 
-      - name: Upload files
+      - name: Upload Files for Deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          name: my-artifact
-          path: ./
+          name: my-artifact  # ✅ Ensure this matches deploy step
+          path: .  # ✅ Ensure it includes your `index.html`
 
-      - name: List Available Artifacts
+      - name: Debug Uploaded Artifacts
         run: |
           echo "Checking available artifacts..."
-          ls -R ${{ runner.temp }}
-
-      - name: Wait before deploying
-        run: sleep 10 
+          gh run list
+          gh run view --log
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
         with:
-          artifact_name: my-artifact
+          artifact_name: my-artifact  # ✅ Ensure name matches upload step
           token: ${{ secrets.GITHUB_TOKEN }}
