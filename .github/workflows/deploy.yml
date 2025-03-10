@@ -32,8 +32,14 @@ jobs:
       - name: Debug Uploaded Artifacts
         run: |
           echo "Checking available artifacts..."
-          gh run list
-          gh run view --log
+          gh run list --limit 5
+          latest_failed_run=$(gh run list --json databaseId,conclusion --jq '.[] | select(.conclusion=="failure") | .databaseId' | head -n 1)
+          echo "Latest failed run ID: $latest_failed_run"
+          if [[ -n "$latest_failed_run" ]]; then
+            gh run view "$latest_failed_run" --log
+          else
+            echo "No failed runs found."
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
